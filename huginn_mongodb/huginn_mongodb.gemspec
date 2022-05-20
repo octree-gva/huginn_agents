@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.summary       = %q{Upsert data to a MongoDB database}
   spec.description   = %q{This gem connects to Mongo and upsert the given payloads using huginn}
 
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/octree-gva/huginn_agents"
 
 
   spec.files         = Dir['LICENSE.txt', 'lib/**/*']

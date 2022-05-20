@@ -3,3 +3,4 @@ spec/huginn
 Gemfile.lock
 vendor
 .DS_Store
+*.gem

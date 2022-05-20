@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.summary       = "Harvest tasks for Huginn"
   spec.description   = "Fetch resources from harvest."
 
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/octree-gva/huginn_agents"
 
 
   spec.files         = Dir["LICENSE.txt", "lib/**/*"]
