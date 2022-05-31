@@ -2,5 +2,5 @@ huginn:
   agents: 
     huginn_harvest:
       :path: /home/huginn/gems/harvest
-    huginn_mongo:
-      :path: /home/huginn/gems/mongo
+    huginn_mongodb:
+      :path: /home/huginn/gems/mongodb
