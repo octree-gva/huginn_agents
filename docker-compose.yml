@@ -1,0 +1,44 @@
+version: "3"
+services:
+  app: 
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_PASSWORD=insecure-password
+      - DATABASE_USERNAME=huginn
+      - DATABASE_NAME=huginn_lite
+    volumes:
+      - ./logs:/var/log/huginn/
+      - ./huginn.yml:/home/huginn/app/config/huginn.yml
+      - ./huginn_harvest:/home/huginn/gems/harvest
+    depends_on:
+      - pg
+      - mailer
+    links:
+      - pg
+      - mailer
+      
+  pg:
+    container_name: huginn_db
+    image: postgres:14
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=insecure-password
+      - POSTGRES_USER=huginn
+      - POSTGRES_DB=huginn_lite
+    ports:
+      - "5400:5432"
+
+  mailer:  
+    image: tophfr/mailcatcher
+    ports:
+      - "1080:80"
+
+
+volumes:
+  pg-data: {}
+networks:
+  private:
+    internal: true

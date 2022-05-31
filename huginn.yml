@@ -1,0 +1,4 @@
+huginn:
+  agents: 
+    huginn_harvest:
+      :path: /home/huginn/gems/harvest
