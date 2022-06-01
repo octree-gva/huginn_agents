@@ -13,6 +13,7 @@ COPY ./huginn.yml /home/huginn/app/config/huginn.yml
 RUN bundle install
 
 FROM $HUGINN_IMAGE
+
 COPY --from=base /usr/local/bundle/ /usr/local/bundle/
 COPY --from=base /home/huginn/gems /home/huginn/gems
 COPY --from=base /home/huginn/app/Gemfile.lock /home/huginn/app/Gemfile.lock
