@@ -50,11 +50,17 @@ module Agents
         database: interpolated["database"],
         auth_source: "admin"
       )
-      collection = mongo_client[interpolated["collection"]]
       incoming_events.each do |event|
         payload = interpolated(event)
-        payload["data"]["_id"] = payload["guid"]
-        result = collection.update_one(
+        collection=interpolated["collection"]
+        guid = payload["guid"]
+        matches = guid.split("/")
+        if matches.size > 1
+          collection = matches.first
+        end
+        client = mongo_client[collection]
+        payload["data"]["_id"] = guid
+        result = client.update_one(
           { _id: payload["guid"] },
           payload["data"],
           { upsert: true }
