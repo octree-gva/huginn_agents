@@ -52,7 +52,7 @@ module Agents
         access_token: interpolated["access_token"], 
         account_id: interpolated["account_id"]
       )
-      metas = {account: interpolated["account_id"], model: interpolated["model"]}
+      metas = {account: interpolated["account_id"], model: "harvest_#{interpolated["model"]}"}
       case options["model"]
       when "clients"
         harvest_client.clients.each do |client|

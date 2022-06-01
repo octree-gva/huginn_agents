@@ -12,6 +12,7 @@ services:
       - ./logs:/var/log/huginn/
       - ./huginn.yml:/home/huginn/app/config/huginn.yml
       - ./huginn_harvest:/home/huginn/gems/harvest
+      - ./huginn_notion:/home/huginn/gems/notion
     depends_on:
       - pg
       - mailer

@@ -4,3 +4,5 @@ huginn:
       :path: /home/huginn/gems/harvest
     huginn_mongodb:
       :path: /home/huginn/gems/mongodb
+    huginn_notion:
+      :path: /home/huginn/gems/notion

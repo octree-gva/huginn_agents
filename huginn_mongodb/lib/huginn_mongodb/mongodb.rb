@@ -52,7 +52,7 @@ module Agents
       )
       incoming_events.each do |event|
         payload = interpolated(event)
-        collection=interpolated["collection"]
+        collection = interpolated["collection"]
         guid = payload["guid"]
         matches = guid.split("/")
         if matches.size > 1

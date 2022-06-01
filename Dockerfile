@@ -8,9 +8,10 @@ RUN apk --update --no-cache add \
 
 COPY ./huginn_harvest /home/huginn/gems/harvest
 COPY ./huginn_mongodb /home/huginn/gems/mongodb
+COPY ./huginn_notion /home/huginn/gems/notion
 COPY ./huginn.yml /home/huginn/app/config/huginn.yml
 
-RUN bundle install
+RUN  bundle install
 
 FROM $HUGINN_IMAGE
 
