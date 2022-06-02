@@ -85,6 +85,17 @@ module Agents
             Hash[key, value["title"].map do |paragraph|
               paragraph.dig("plain_text")
             end.join("")]
+          when "number"
+            Hash[key, value.dig("number")]
+          when "relation"
+            Hash[key, value["relation"].map do |relation|
+              relation.dig("id")
+            end.join("")]
+          when "date"
+            [
+              Hash["#{key} (START)", value.dig("date", "start")],
+              Hash["#{key} (END)", value.dig("date", "end")]
+            ].reduce(:merge)
           when "select"
             Hash[key, value.dig("select", "name")]
           when "rich_text"
