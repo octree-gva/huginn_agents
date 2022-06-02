@@ -14,6 +14,7 @@ module Agents
 
     form_configurable :guid
     form_configurable :data
+    form_configurable :should_emit, type: :text
 
     description <<-MD
       Mongo DB agent
@@ -27,7 +28,8 @@ module Agents
         password: "",
         collection: "",
         guid: "{{guid}}",
-        data: "{{data}}"
+        data: "{{data}}",
+        should_emit: "{% if guid %}true{% endif %}",
       }
     end
 
@@ -52,6 +54,9 @@ module Agents
       )
       incoming_events.each do |event|
         payload = interpolated(event)
+        should_emit = payload["should_emit"]
+        next unless should_emit == "true"
+
         collection = interpolated["collection"]
         guid = payload["guid"]
         matches = guid.split("/")

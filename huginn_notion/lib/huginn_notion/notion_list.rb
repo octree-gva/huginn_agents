@@ -9,10 +9,10 @@ module Agents
     form_configurable :access_token
     form_configurable :filters, type: :text
     form_configurable :sorts, type: :text
-    form_configurable :model, type: :array, values: %w(users databases)
+    form_configurable :model, type: :array, values: %w(users pages databases)
 
     description <<-MD
-      List Notion Data
+      List Notion Databases, pages or users
     MD
 
     def default_options
@@ -36,7 +36,7 @@ module Agents
       metas = { model: "notion_#{interpolated["model"]}" }
       notion_options = {}
       notion_options[:filter] = JSON.parse(interpolated["filters"]) unless interpolated["filters"].empty?
-      notion_options[:sorts]= JSON.parse(interpolated["sorts"]) unless interpolated["sorts"].empty?
+      notion_options[:sorts] = JSON.parse(interpolated["sorts"]) unless interpolated["sorts"].empty?
       case options["model"]
       when "users"
         notion_client.users_list(**notion_options).each do |page|
@@ -52,12 +52,37 @@ module Agents
             }
           end
         end
-      when "databases"
-        additional_filters = { property: 'object', value: 'database' }
+      when "pages"
+        additional_filters = { property: "object", value: "page" }
         if notion_options[:filter].nil?
           notion_options[:filter] = additional_filters
         else
-          notion_options[:filter] = {and: [additional_filters, notion_options[:filter]]}
+          notion_options[:filter] = { and: [additional_filters, notion_options[:filter]] }
+        end
+        notion_client.search(**notion_options).each do |page_search|
+          attribute = page_search.first
+          next if attribute != "results"
+
+          rows = page_search.last
+          next if rows.nil?
+          rows.each do |page|
+            title = page["title"].map do |rich_text|
+              rich_text["plain_text"]
+            end.join("")
+            page["page_title"] = title
+            page["page_type"] = title.gsub(/\[(\w+)\]/).first
+            create_event payload: {
+              metas: metas,
+              data: page
+            }
+          end
+        end
+      when "databases"
+        additional_filters = { property: "object", value: "database" }
+        if notion_options[:filter].nil?
+          notion_options[:filter] = additional_filters
+        else
+          notion_options[:filter] = { and: [additional_filters, notion_options[:filter]] }
         end
         notion_client.search(**notion_options).each do |database_search|
           attribute = database_search.first
@@ -78,6 +103,6 @@ module Agents
           end
         end
       end
-   end
+    end
   end
 end
