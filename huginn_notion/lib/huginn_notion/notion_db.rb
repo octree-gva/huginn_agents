@@ -67,10 +67,7 @@ module Agents
     end
     private
       def parse_notion_result(result)
-        result["created_by"] = result.dig("created_by", "id")
-        result["last_edited_by"] = result.dig("last_edited_by", "id")
-        result["icon"] = result.dig("icon", "file", "url")
-        result["properties"] = result["properties"].map do |key, value|
+        properties = result["properties"].map do |key, value|
           type = value.dig("type")
           case type
           when "multi_select"
@@ -98,6 +95,8 @@ module Agents
             ].reduce(:merge)
           when "select"
             Hash[key, value.dig("select", "name")]
+          when "emoji"
+            Hash[key, value.dig("emoji")]
           when "rich_text"
             Hash[key, value["rich_text"].map do |paragraph|
               paragraph.dig("plain_text")
@@ -106,6 +105,11 @@ module Agents
             Hash[key, value]
           end
         end.reduce(:merge)
+        properties["__created_by"] = result.dig("created_by", "id")
+        properties["__created_time"] = result.dig("created_time")
+        properties["__last_edited_by"] = result.dig("last_edited_by", "id")
+        properties["__last_edited_time"] = result.dig("last_edited_time")
+        result["properties"] = properties
         result
       end
   end
